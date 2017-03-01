@@ -1,8 +1,3 @@
-## 一个使用golang编写的简易的web框架 灵感来自于Python的tornado
-
-### 一个简单的示例
-
-```shell
 package main
 
 import (
@@ -29,4 +24,3 @@ func main()  {
 	application.RegisterHandler(`/get/\d+`, new(newhandler))
 	application.Start()
 }
-```

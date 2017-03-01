@@ -1,0 +1,3 @@
+package: github.com/wupeaking/typhon
+import:
+- package: github.com/Sirupsen/logrus
