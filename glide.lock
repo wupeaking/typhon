@@ -1,6 +1,12 @@
 hash: d8a99837fd239b4385e4fa0614cb91d7eae2c4c6c9771438a01798364d01bb91
-updated: 2017-03-01T14:14:56.108458489+08:00
+updated: 2017-03-02T17:04:44.561439029+08:00
 imports:
+- name: github.com/bitly/go-simplejson
+  version: da1a8928f709389522c8023062a3739f3b4af419
+- name: github.com/mitchellh/copystructure
+  version: f81071c9d77b7931f78c90b416a074ecdc50e959
+- name: github.com/mitchellh/reflectwalk
+  version: 417edcfd99a4d472c262e58f22b4bfe97580f03e
 - name: github.com/Sirupsen/logrus
   version: c078b1e43f58d563c74cebe63c85789e76ddb627
 - name: golang.org/x/sys
