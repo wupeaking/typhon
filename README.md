@@ -1,6 +1,17 @@
 ## 一个使用golang编写的简易的web框架 灵感来自于Python的tornado
 
-### 一个简单的示例
+##使用示例
+
+```shell
+$ go get github.com/wupengxin/typhon
+
+$ go run main.go
+
+curl localhost:9090
+
+```
+
+### 一个简单的示例代码
 
 ```shell
 package main

@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"runtime"
 	"reflect"
+	"github.com/wupeaking/typhon/web"
 )
 
 // 定义路由接口
@@ -41,6 +42,8 @@ func New(addr string, debug bool) *Application{
 	}
 	app.entry = make(map[string]RouteHandler)
 	app.entryRegex = make(map[string]*regexp.Regexp)
+	// 注册默认的根路径handler
+	app.RegisterRouter("/", new(routerControl))
 	return app
 }
 
@@ -169,4 +172,87 @@ func(app *Application)Start() error{
 		log.WithField("err:", e).Fatal("start web server fail")
 	}
 	return e
+}
+
+// 编写根路径的默认handler
+
+// 默认的首页html
+var html = `<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>typhone index</title>
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <h1>你好，世界！</h1>
+    <h3>这是一个简单的web框架 基于golang编写 用于自己的小项目中</h3>
+	<h6>下面是一个简单的示例: </h6>
+    <div>
+    	<pre>
+    		package main
+			import (
+				"github.com/wupeaking/typhon/web"
+				"github.com/wupeaking/typhon/app"
+				"net/http"
+			)
+
+			type newhandler struct {
+				web.BaseHandler
+			}
+
+			// 打印异常信息栈 获取请求的参数 以及正则匹配的分组参数
+			func (h *newhandler) Get() error  {
+				fmt.Println("分组内容: ", h.GroupArgs)
+				h.Write([]byte("这是一个新方法"))
+
+				println(h.GetArguments())
+				var a map[string]string
+				// 故意写一个异常
+				a["a"] = "a"
+				return nil
+			}
+
+			// 获取post方法的请求参数 分组参数
+			func (h *newhandler) Post() error {
+				h.Write([]byte("this is post response"))
+				fmt.Println(h.GetArguments())
+				fmt.Println(h.GroupArgs)
+				return nil
+			}
+
+			func main()  {
+				application := app.New(":9090", true)
+				application.RegisterRouter("/", new(web.BaseHandler))
+				# 注册正则路由
+				application.RegisterRouter("/get/\d+", new(newhandler))
+					# 注册分组的正则路由
+					application.RegisterRouter("/aaa/(?P<name>\w+)/(?P<id>\d+)", new(newhandler))
+				application.Start()
+			}
+    	</pre>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  </body>
+</html>`
+
+type routerControl struct {
+	web.BaseHandler
+}
+
+func (ctl *routerControl)Get() error {
+	ctl.Write(utils.Str2bytes(html))
+	return nil
 }

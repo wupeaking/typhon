@@ -30,7 +30,7 @@ func (h *newhandler) Post() error {
 
 func main()  {
 	application := app.New(":9090", true)
-	application.RegisterRouter("/", new(web.BaseHandler))
+	//application.RegisterRouter("/", new(web.BaseHandler))
 	application.RegisterRouter(`/get/(?P<name>\d+)`, new(newhandler))
 	application.RegisterRouter(`/aaa/(?P<name>\w+)/(?P<id>\d+)`, new(newhandler))
 	application.Start()
